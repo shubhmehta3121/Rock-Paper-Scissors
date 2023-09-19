@@ -18,7 +18,7 @@ This Python script creates a simple interactive Rock-Paper-Scissors game that ut
 **How to Use:**
 
 - Clone the repository and install the required libraries.
-- Run the `Step 5 New.py` script.
+- Run the `Game Time.py` script.
 - Follow the on-screen instructions to play the game and make hand gestures to select "Rock," "Paper," or "Scissors."
 
 **Purpose:**
