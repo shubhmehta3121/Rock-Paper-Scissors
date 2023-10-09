@@ -26,9 +26,9 @@ cap = cv2.VideoCapture(0)
 detector = HandDetector(maxHands=1)
 cv2.namedWindow('Game',cv2.WINDOW_NORMAL)
 cv2.resizeWindow('Game', 1200, 800)
-seconds = 5
-stat_screen = 5
-winner_screen = 5
+seconds = 3
+stat_screen = 3
+winner_screen = 3
 game_started=False
 stats = {'User': 0, 'Computer': 0, 'Tie': 0}
 
@@ -143,7 +143,7 @@ while True:
                 else:
                     elapsed_time = time() - start_time
                     remaining_time = max(0, seconds - int(elapsed_time))
-                    cv2.putText(frame, f"Game starts in : {remaining_time}", (10, 400), cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255), 2)
+                    cv2.putText(frame, f"Game starts in : {remaining_time}", (10, 400), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
                     if remaining_time == 0:
                         pred, index = Classifier.getPrediction(classifier, white, draw=False)
@@ -152,10 +152,10 @@ while True:
                             cv2.namedWindow('Stats')
                             start_stat_time = time()
                             blank = np.zeros((512, 512, 3), np.uint8)
-                            cv2.putText(blank, f'Total games: {stats["User"] + stats["Computer"] + stats["Tie"]} games',(50, 50),cv2.FONT_HERSHEY_COMPLEX, 1, (0, 0, 255), 2)
-                            cv2.putText(blank, f'Player won {stats["User"]} games', (50, 150), cv2.FONT_HERSHEY_COMPLEX, 1,(0, 0, 255), 2)
-                            cv2.putText(blank, f'Computer won {stats["Computer"]} games', (50, 250),cv2.FONT_HERSHEY_COMPLEX, 1,(0, 0, 255), 2)
-                            cv2.putText(blank, f'There are {stats["Tie"]} ties', (50, 350), cv2.FONT_HERSHEY_COMPLEX, 1,(0, 0, 255),2)
+                            cv2.putText(blank, f'Total games: {stats["User"] + stats["Computer"] + stats["Tie"]} games',(50, 50),cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
+                            cv2.putText(blank, f'Player won {stats["User"]} games', (50, 150), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)
+                            cv2.putText(blank, f'Computer won {stats["Computer"]} games', (50, 250),cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255), 2)
+                            cv2.putText(blank, f'There are {stats["Tie"]} ties', (50, 350), cv2.FONT_HERSHEY_SIMPLEX, 1,(0, 0, 255),2)
 
                             while int(time()-start_stat_time)<=stat_screen:
                                 cv2.imshow('Stats', blank)
@@ -173,20 +173,20 @@ while True:
 
                             while int(time()-winner_start_time)<winner_screen:
                                 if result == 'User':
-                                    icon = cv2.imread('gestures/win.png')
+                                    icon = cv2.imread('gestures/win.jpg')
                                 elif result == 'Computer':
                                     icon = cv2.imread('gestures/lose.jpg')
                                 else:
                                     icon = cv2.imread('gestures/tie.jpg')
                                 icon = cv2.resize(icon, (310, 290))
                                 result_blank = np.ones((480, 640, 3), np.uint8) * 125
-                                result_icon = cv2.imread(f'gestures/{computer_choice}.png')
-                                cv2.putText(result_blank,'Computer Choice',(10,350),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,0),1)
-                                cv2.putText(result_blank,'Result',(450,350),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,0),1)
+                                result_icon = cv2.imread(f'gestures/{computer_choice}.jpg')
+                                cv2.putText(result_blank,'Computer Choice',(10,350),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,0),1)
+                                cv2.putText(result_blank,'Result',(450,350),cv2.FONT_HERSHEY_SIMPLEX,1,(0,0,0),1)
                                 result_icon = cv2.resize(result_icon, (290, 290))
                                 result_blank[10:300, 10:300] = result_icon
                                 result_blank[10:300,320:630]=icon
-                                cv2.putText(result_blank,f'New Game starts in {winner_screen-int(time()-winner_start_time)} seconds',(10,400),cv2.FONT_HERSHEY_COMPLEX,1,(0,0,255),1)
+                                cv2.putText(result_blank,f'New Game starts in {winner_screen-int(time()-winner_start_time)} seconds',(10,420),cv2.FONT_HERSHEY_SIMPLEX,1.15,(255,255,255),1)
                                 cv2.imshow('Result',result_blank)
                                 cv2.imshow('Game',frame)
                                 cv2.waitKey(1)
@@ -195,47 +195,35 @@ while True:
 
             else:
                 game_started = False
-                icon = cv2.imread('gestures/blank.jpg')
-                icon_resize = cv2.resize(icon, (290, 290))
-                frame[10:300, 10:300] = icon_resize
-                frame[10:300, 10:300] = icon_resize
-                instruction = np.ones((512, 512, 3), np.uint8) * 255
+                instruction = np.ones((512, 512, 3), np.uint8) * 210
                 instruction = cv2.resize(instruction, (620, 150))
                 frame[320:470, 10:630] = instruction
-                cv2.putText(frame, 'Please Play', (10, 365), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 1)
-                cv2.putText(frame, '--> Place your hand in the box and make the gesture', (10, 400),cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 1)
-                cv2.putText(frame, '    for either "Rock","Paper","Scissors" (palm facing screen always)', (20, 415),cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 1)
-                cv2.putText(frame, '--> Do a "Thumbs Up" for knowing your stats', (10, 445), cv2.FONT_HERSHEY_COMPLEX,0.5, (0, 0, 255), 1)
-                cv2.putText(frame, 'BY: SHUBH MEHTA', (505, 460), cv2.FONT_HERSHEY_COMPLEX, 0.40, (0, 0, 0), 1)
+                cv2.putText(frame, 'Please Play', (10, 365), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 1)
+                cv2.putText(frame, '--> Place your hand in the box and make the gesture', (10, 400),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+                cv2.putText(frame, '    for either "Rock","Paper","Scissors" (palm facing screen always)', (20, 415),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+                cv2.putText(frame, '--> Do a "Thumbs Up" for knowing your stats', (10, 445), cv2.FONT_HERSHEY_SIMPLEX,0.5, (0, 0, 0), 1)
+                cv2.putText(frame, 'BY: SHUBH MEHTA', (505, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (0, 0, 0), 1)
 
         else:
             game_started=False
-            icon = cv2.imread('gestures/blank.jpg')
-            icon_resize = cv2.resize(icon, (290, 290))
-            frame[10:300, 10:300] = icon_resize
-            frame[10:300, 10:300] = icon_resize
-            instruction = np.ones((512, 512, 3), np.uint8) * 255
+            instruction = np.ones((512, 512, 3), np.uint8) * 210
             instruction = cv2.resize(instruction, (620, 150))
             frame[320:470, 10:630] = instruction
-            cv2.putText(frame, 'Please Play', (10, 365), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 1)
-            cv2.putText(frame, '--> Place your hand in the box and make the gesture', (10, 400),cv2.FONT_HERSHEY_COMPLEX, 0.5, (0, 0, 255), 1)
-            cv2.putText(frame, '    for either "Rock","Paper","Scissors" (palm facing screen always)', (20, 415), cv2.FONT_HERSHEY_COMPLEX, 0.5,(0, 0, 255), 1)
-            cv2.putText(frame, '--> Do a "Thumbs Up" for knowing your stats', (10, 445), cv2.FONT_HERSHEY_COMPLEX, 0.5,(0, 0, 255), 1)
-            cv2.putText(frame, 'BY: SHUBH MEHTA', (505, 460), cv2.FONT_HERSHEY_COMPLEX, 0.40, (0, 0, 0), 1)
+            cv2.putText(frame, 'Please Play', (10, 365), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 1)
+            cv2.putText(frame, '--> Place your hand in the box and make the gesture', (10, 400),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+            cv2.putText(frame, '    for either "Rock","Paper","Scissors" (palm facing screen always)', (20, 415),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+            cv2.putText(frame, '--> Do a "Thumbs Up" for knowing your stats', (10, 445), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(0, 0, 0), 1)
+            cv2.putText(frame, 'BY: SHUBH MEHTA', (505, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (0, 0, 0), 1)
     else:
         game_started=False
-        icon = cv2.imread('gestures/blank.jpg')
-        icon_resize = cv2.resize(icon, (290, 290))
-        frame[10:300, 10:300] = icon_resize
-        frame[10:300, 10:300] = icon_resize
-        instruction = np.ones((512, 512, 3), np.uint8) * 255
+        instruction = np.ones((512, 512, 3), np.uint8) * 210
         instruction = cv2.resize(instruction, (620,150))
         frame[320:470, 10:630] = instruction
-        cv2.putText(frame, 'Please Play', (10, 365), cv2.FONT_HERSHEY_COMPLEX, 2, (0, 0, 255), 1)
-        cv2.putText(frame, '--> Place your hand in the box and make the gesture', (10, 400), cv2.FONT_HERSHEY_COMPLEX, 0.5,(0, 0, 255), 1)
-        cv2.putText(frame, '    for either "Rock","Paper","Scissors" (palm facing screen always)', (20, 415), cv2.FONT_HERSHEY_COMPLEX, 0.5,(0, 0, 255), 1)
-        cv2.putText(frame, '--> Do a "Thumbs Up" for knowing your stats', (10, 445), cv2.FONT_HERSHEY_COMPLEX, 0.5,(0, 0, 255), 1)
-        cv2.putText(frame, 'BY: SHUBH MEHTA', (505,460), cv2.FONT_HERSHEY_COMPLEX, 0.40, (0, 0, 0), 1)
+        cv2.putText(frame, 'Please Play', (10, 365), cv2.FONT_HERSHEY_SIMPLEX, 2, (0, 0, 0), 1)
+        cv2.putText(frame, '--> Place your hand in the box and make the gesture', (10, 400), cv2.FONT_HERSHEY_SIMPLEX,0.5, (0, 0, 0), 1)
+        cv2.putText(frame, '    for either "Rock","Paper","Scissors" (palm facing screen always)', (20, 415),cv2.FONT_HERSHEY_SIMPLEX, 0.5, (0, 0, 0), 1)
+        cv2.putText(frame, '--> Do a "Thumbs Up" for knowing your stats', (10, 445), cv2.FONT_HERSHEY_SIMPLEX, 0.5,(0, 0, 0), 1)
+        cv2.putText(frame, 'BY: SHUBH MEHTA', (505, 460), cv2.FONT_HERSHEY_SIMPLEX, 0.40, (0, 0, 0), 1)
     cv2.imshow('Game',frame)
     cv2.waitKey(1)
 
