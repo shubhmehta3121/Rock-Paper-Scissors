@@ -7,7 +7,13 @@ import shutil
 import numpy as np
 from cvzone.HandTrackingModule import HandDetector
 
-
+"""
+--> Define samples and save_path parameters as you want.
+--> Press c to pause/resume photo collection
+--> You need 'Custom Hands.py' to run this, 
+--> Do the below step in this code if you don't want to use 'Custom Hands.py'
+--> #frame = ch(frame, hands, 4, 2, 4, 2,padding)
+"""
 
 # Define the labels for different image categories
 labels = ['rock', 'paper', 'scissors', 'restart']
