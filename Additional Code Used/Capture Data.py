@@ -1,6 +1,5 @@
 import cv2
 import sys
-sys.path.append(r'C:\Users\SHUBH MEHTA\Documents\Pycharm Projects')
 from Custom_Hands import custom as ch
 import os
 import shutil
